@@ -12,3 +12,19 @@ A small, production-style starter repo that demonstrates:
 ### Install deps
 ```bash
 uv sync
+
+## Quickstart (Docker)
+
+```bash
+docker compose up -d --build
+
+# Then run the smoke test:
+
+.\smoke_test.ps1
+
+# Commit it:
+
+```powershell
+git add README.md
+git commit -m "Add quickstart instructions"
+git log --oneline --max-count=5
