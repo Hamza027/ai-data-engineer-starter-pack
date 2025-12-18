@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16
+    container_name: starter_pack_db
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: foundations
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d foundations"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    container_name: starter_pack_api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PG_DSN: postgresql://app:app@db:5432/foundations
+      INPUT_CSV_PATH: /app/data/sales.csv
+      OUT_DIR: /app/out
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./out:/app/out
+
+volumes:
+  pgdata:
